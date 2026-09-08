@@ -1,0 +1,588 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   THEME VARIANT
+   The site is dark by default. Adding `.light` to <html> flips every token.
+   ========================================================================== */
+
+@custom-variant light (&:where(.light, .light *));
+
+/* ==========================================================================
+   DESIGN TOKENS — DARK (default)
+   Every colour in the UI comes from these variables. Change them here and the
+   entire site re-themes coherently.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg: #07080b;
+  --bg-elevated: #0b0d13;
+  --surface: #0f1218;
+  --surface-hi: #151922;
+
+  /* Hairlines */
+  --line: rgb(255 255 255 / 0.07);
+  --line-hi: rgb(255 255 255 / 0.13);
+
+  /* Text */
+  --fg: #e9ecf3;
+  --fg-muted: #9ba2b5;
+  --fg-dim: #7b8296;
+
+  /* Accents */
+  --accent: #5b8cff;
+  --accent-hi: #7ba4ff;
+  --accent-2: #8b7cff;
+  --accent-3: #35d6ee;
+
+  /* Derived accent washes */
+  --accent-soft: rgb(91 140 255 / 0.12);
+  --accent-line: rgb(91 140 255 / 0.28);
+  --glow: rgb(91 140 255 / 0.30);
+  --glow-2: rgb(139 124 255 / 0.22);
+  --glow-3: rgb(53 214 238 / 0.16);
+
+  /* Effects */
+  --grid-line: rgb(255 255 255 / 0.035);
+  --noise-opacity: 0.035;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 40px -12px rgb(0 0 0 / 0.6);
+  --shadow-lift: 0 1px 2px rgb(0 0 0 / 0.4), 0 24px 60px -16px rgb(0 0 0 / 0.75);
+
+  /* Layout rhythm */
+  --nav-h: 4.5rem;
+}
+
+/* ==========================================================================
+   DESIGN TOKENS — LIGHT
+   Deliberately a full, considered palette rather than an inverted afterthought.
+   ========================================================================== */
+
+:root.light {
+  color-scheme: light;
+
+  --bg: #fcfcfd;
+  --bg-elevated: #f5f6f9;
+  --surface: #ffffff;
+  --surface-hi: #f7f8fb;
+
+  --line: rgb(9 11 20 / 0.09);
+  --line-hi: rgb(9 11 20 / 0.16);
+
+  --fg: #0a0c12;
+  --fg-muted: #545b6e;
+  /*
+    Darker than it looks like it needs to be, on purpose: the monospace
+    eyebrows render at 10–11px, and at that size #767d8f only reached 4.1:1
+    against white. This clears WCAG AA (>=5:1) everywhere it is used.
+  */
+  --fg-dim: #656c7e;
+
+  --accent: #2c5fe0;
+  --accent-hi: #1e4fd0;
+  --accent-2: #6248d8;
+  --accent-3: #0b93ae;
+
+  --accent-soft: rgb(44 95 224 / 0.07);
+  --accent-line: rgb(44 95 224 / 0.22);
+  --glow: rgb(44 95 224 / 0.14);
+  --glow-2: rgb(98 72 216 / 0.10);
+  --glow-3: rgb(11 147 174 / 0.08);
+
+  --grid-line: rgb(9 11 20 / 0.045);
+  --noise-opacity: 0.02;
+  --shadow-card: 0 1px 2px rgb(9 11 20 / 0.05), 0 12px 32px -12px rgb(9 11 20 / 0.12);
+  --shadow-lift: 0 1px 2px rgb(9 11 20 / 0.06), 0 24px 56px -16px rgb(9 11 20 / 0.18);
+}
+
+/* ==========================================================================
+   TAILWIND THEME REGISTRATION
+   `inline` keeps the var() reference live so utilities follow the theme.
+   ========================================================================== */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-surface: var(--surface);
+  --color-surface-hi: var(--surface-hi);
+
+  --color-line: var(--line);
+  --color-line-hi: var(--line-hi);
+
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-dim: var(--fg-dim);
+
+  --color-accent: var(--accent);
+  --color-accent-hi: var(--accent-hi);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, Consolas,
+    monospace;
+
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
+
+  --radius-card: 1rem;
+
+  /* Slightly tightened display sizes for the hero */
+  --text-display: clamp(2.1rem, 1.1rem + 3.6vw, 3.85rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.035em;
+
+  --text-title: clamp(1.85rem, 1.1rem + 2.6vw, 3.1rem);
+  --text-title--line-height: 1.08;
+  --text-title--letter-spacing: -0.028em;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Keep anchored sections clear of the sticky navigation bar. */
+    scroll-padding-top: calc(var(--nav-h) + 1.5rem);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Nothing on this site is allowed to scroll sideways. */
+    overflow-x: clip;
+  }
+
+  /* A single, consistent, always-visible focus treatment. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: #ffffff;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Scrollbar — restrained, theme-aware. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-hi) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--line-hi);
+    border-radius: 999px;
+    border: 3px solid var(--bg);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--fg-dim);
+  }
+}
+
+/* ==========================================================================
+   COMPONENT PRIMITIVES
+   ========================================================================== */
+
+@layer components {
+  /* Monospace eyebrow label used above every section title. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+  }
+
+  /* Hairline-bordered elevated panel — the base of every card on the site. */
+  .panel {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+  }
+
+  /* Gradient text used for the accent portion of headlines. */
+  .text-gradient {
+    background-image: linear-gradient(
+      100deg,
+      var(--accent) 0%,
+      var(--accent-2) 48%,
+      var(--accent-3) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* Avoid descenders being clipped by the background-clip box. */
+    padding-bottom: 0.06em;
+  }
+
+  /* Technology chip. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border: 1px solid var(--line);
+    background-color: var(--bg-elevated);
+    color: var(--fg-muted);
+    border-radius: 999px;
+    padding: 0.25rem 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    transition: color 0.18s ease, border-color 0.18s ease,
+      background-color 0.18s ease;
+  }
+
+  .chip-accent {
+    border-color: var(--accent-line);
+    background-color: var(--accent-soft);
+    color: var(--accent-hi);
+  }
+}
+
+/* ==========================================================================
+   ENTRANCE ANIMATIONS
+
+   Everything here is scoped to `html.js`, which the inline head script adds
+   before first paint. The consequence matters: the server-rendered HTML is
+   fully visible, so the page still reads with JavaScript disabled, and the
+   browser can record a paint immediately instead of waiting for hydration.
+   ========================================================================== */
+
+@layer components {
+  /* Default (no JS): fully visible, no transform. */
+  .reveal {
+    opacity: 1;
+  }
+
+  .js .reveal {
+    opacity: 0;
+    transition:
+      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .js .reveal-bottom {
+    transform: translate3d(0, 18px, 0);
+  }
+
+  .js .reveal-left {
+    transform: translate3d(-18px, 0, 0);
+  }
+
+  .js .reveal-right {
+    transform: translate3d(18px, 0, 0);
+  }
+
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    /* Release the compositor hint once the element has settled. */
+    will-change: auto;
+  }
+
+  /*
+    Hero entrance.
+
+    Not gated behind an IntersectionObserver: the hero is above the fold by
+    definition, so it animates straight from first paint. That keeps the
+    Largest Contentful Paint at the first frame rather than deferring it until
+    React has hydrated.
+  */
+  .js .hero-in {
+    animation: hero-rise 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .js .hero-scale-in {
+    animation: hero-scale 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 16px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hero-scale {
+    from {
+      opacity: 0;
+      transform: scale(0.975);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+
+@layer utilities {
+  /* Blueprint grid backdrop. */
+  .bg-grid {
+    background-image: linear-gradient(
+        to right,
+        var(--grid-line) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .bg-grid-sm {
+    background-image: linear-gradient(
+        to right,
+        var(--grid-line) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* Fades a decorative layer out towards the edges. */
+  .mask-fade {
+    -webkit-mask-image: radial-gradient(
+      ellipse 75% 65% at 50% 40%,
+      #000 30%,
+      transparent 78%
+    );
+    mask-image: radial-gradient(
+      ellipse 75% 65% at 50% 40%,
+      #000 30%,
+      transparent 78%
+    );
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  }
+
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+  }
+
+  /* Very fine film grain — removes the flatness of large dark areas. */
+  .noise::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: var(--noise-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Animated conic border used on the featured project card. */
+  .ring-glow {
+    position: relative;
+  }
+
+  .ring-glow::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      130deg,
+      var(--accent-line),
+      transparent 42%,
+      transparent 58%,
+      var(--accent-line)
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .group:hover .ring-glow::before,
+  .ring-glow:hover::before {
+    opacity: 1;
+  }
+
+  /* Horizontal auto-scrolling row (languages marquee). */
+  .animate-marquee {
+    animation: marquee 42s linear infinite;
+  }
+
+  .marquee-host:hover .animate-marquee {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Slow accent drift for ambient background blobs. */
+  .animate-drift {
+    animation: drift 22s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift {
+    from {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(3%, -4%, 0) scale(1.12);
+    }
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-ring {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.35;
+      transform: scale(1.9);
+    }
+  }
+
+  /* Skip-link: hidden until focused. */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    transform: translateY(-200%);
+    transition: transform 0.2s ease;
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   A hard global stop. Anything decorative freezes; nothing becomes unusable.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+    /*
+      Delays have to be zeroed too. A staggered entrance with a 0.4s delay and
+      a 0.001s duration would still leave the element invisible for 0.4s —
+      which is exactly the flicker reduced-motion users are trying to avoid.
+    */
+    animation-delay: 0s !important;
+    transition-delay: 0s !important;
+  }
+
+  /* Belt and braces: nothing may be left mid-transition. */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   PRINT
+   Recruiters do occasionally print. Make it legible instead of a black slab.
+   ========================================================================== */
+
+@media print {
+  :root {
+    --bg: #ffffff;
+    --fg: #000000;
+    --fg-muted: #333333;
+  }
+
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  header,
+  nav,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+}
