@@ -1,0 +1,1576 @@
+================================================================================
+
+                        ABDEDAYM CHAKRA — PORTFOLIO
+                       COMPLETE STEP-BY-STEP GUIDE
+
+================================================================================
+
+This guide is written for someone who did not build this project.
+It assumes no prior knowledge. Follow it top to bottom and everything works.
+
+Every command in this guide is typed into a TERMINAL, from inside the project
+folder. On Linux you can open a terminal in the folder, or open a terminal and
+type:
+
+    cd "/home/timsilo/Desktop/hussin/Portfolio repo"
+
+(That path is where the project lives on this computer. If you move the folder,
+use the new path.)
+
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+
+    1.  WHAT WAS BUILT
+    2.  PROJECT STRUCTURE
+    3.  REQUIREMENTS BEFORE RUNNING
+    4.  HOW TO RUN THE PROJECT LOCALLY
+    5.  WHERE TO PUT MY PROFILE PHOTO
+    6.  WHERE TO PUT PROJECT SCREENSHOTS
+    7.  WHERE TO PUT MY CV PDF
+    8.  HOW TO CHANGE MY PERSONAL INFORMATION
+    9.  HOW TO ADD OR EDIT PROJECTS
+    10. HOW TO ADD EXPERIENCE AND EDUCATION
+    11. HOW TO ADD NEW SKILLS
+    12. HOW TO ADD ACHIEVEMENTS AND CERTIFICATIONS
+    13. ENVIRONMENT VARIABLES
+    14. GITHUB REPOSITORY STATUS
+    15. HOW TO DEPLOY ON VERCEL
+    16. AUTOMATIC DEPLOYMENTS
+    17. HOW TO UPDATE THE LIVE PORTFOLIO
+    18. CUSTOM DOMAIN (OPTIONAL)
+    19. TROUBLESHOOTING
+    20. FINAL CHECKLIST BEFORE DEPLOYMENT
+
+
+================================================================================
+1. WHAT WAS BUILT
+================================================================================
+
+A complete, production-ready personal portfolio website.
+
+TECHNOLOGIES USED
+-----------------
+
+    Next.js 16          The website framework (React-based).
+                        It builds the site into fast, static HTML pages.
+
+    React 19            The library that builds the user interface.
+
+    TypeScript          JavaScript with type checking. It catches mistakes
+                        (like a misspelled field name) before the site runs.
+
+    Tailwind CSS 4      The styling system. Colours, spacing and typography
+                        all come from design tokens defined in one file.
+
+    Framer Motion       Animation library. Used only where it is genuinely
+                        needed: the command palette, the project drawer, the
+                        mobile menu, the nav indicator and the scroll bar.
+
+    Lucide React        The icon set.
+
+There is NO database, NO backend server and NO paid service.
+The whole site is static files, which is why it is fast and free to host.
+
+
+WHAT THE WEBSITE CONTAINS
+-------------------------
+
+    Hero            Your name, your positioning, an animated diagram of the
+                    DATA -> AI -> SOFTWARE -> CLOUD pipeline, and two buttons
+                    (View My Work / Download CV).
+
+    About (01)      Your photo, your story, your education and your languages.
+
+    Experience (02) A timeline of your two internships (ONEE and IAWEB.DEV),
+                    with the workstreams and technology stack of each.
+
+    Projects (03)   One large featured case study (AgriSure AI) plus a grid of
+                    the other projects. Clicking any card opens a full
+                    case-study panel: The Challenge, The Solution,
+                    Architecture, Key Features, Impact, Stack and links.
+
+    Skills (04)     Your technologies grouped into six engineering domains.
+                    Deliberately no percentage bars and no invented ratings.
+
+    Achievements(05) The RAMADANIA 3rd place, Club IRISI, other competitions,
+                    and your Oracle certification.
+
+    Contact (06)    A large call to action, your email (click to send, or copy
+                    to clipboard), your GitHub and LinkedIn, and a CV download.
+
+
+FEATURES YOU MIGHT NOT NOTICE IMMEDIATELY
+-----------------------------------------
+
+    * Press Ctrl+K (or Cmd+K on a Mac) anywhere on the site. A search palette
+      opens and you can jump to any section, project or link with the keyboard.
+
+    * A dark/light theme switch in the top right. Your choice is remembered.
+
+    * The navigation highlights whichever section you are currently reading.
+
+    * The site works completely without JavaScript, and respects the
+      "reduce motion" accessibility setting.
+
+    * Everything is keyboard accessible and passes automated accessibility
+      checks (0 violations, in both themes, on desktop and mobile).
+
+
+================================================================================
+2. PROJECT STRUCTURE
+================================================================================
+
+Here are the folders that matter. You will only ever need to touch the ones
+marked with >>>.
+
+    Portfolio repo/
+    |
+    |-- guide.txt                 <<< This file.
+    |-- README.md                 Technical overview of the project.
+    |-- package.json              The list of libraries the project uses.
+    |-- next.config.ts            Next.js settings.
+    |-- .env.example              Example environment variables (none required).
+    |-- .gitignore                Files Git must never upload.
+    |-- CV1.pdf                   Your original CV (kept as the source file).
+    |
+    |-- public/                   >>> FILES YOU CAN REPLACE
+    |   |-- documents/
+    |   |   `-- Abdedaym-Chakra-CV.pdf     >>> Your CV (see section 7)
+    |   `-- images/
+    |       |-- profile/
+    |       |   `-- profile.jpg            >>> Your photo (see section 5)
+    |       |-- projects/                  >>> Screenshots (see section 6)
+    |       `-- achievements/              >>> Optional images
+    |
+    `-- src/
+        |
+        |-- data/                 >>> ALL YOUR INFORMATION LIVES HERE
+        |   |-- personal.ts       Name, title, bio, email, links, CV path.
+        |   |-- experience.ts     Internships and jobs.
+        |   |-- education.ts      Degrees.
+        |   |-- projects.ts       Every project and its case study.
+        |   |-- skills.ts         Technology domains and languages.
+        |   |-- achievements.ts   Competitions and community roles.
+        |   |-- certifications.ts Certifications.
+        |   |-- navigation.ts     The menu items.
+        |   `-- index.ts          Just re-exports the files above.
+        |
+        |-- app/                  The pages themselves.
+        |   |-- layout.tsx        The shell: fonts, SEO metadata, nav, footer.
+        |   |-- page.tsx          The home page: the order of the sections.
+        |   |-- globals.css       ALL COLOURS AND DESIGN TOKENS.
+        |   |-- icon.svg          The browser tab icon (favicon).
+        |   |-- opengraph-image.tsx  The image shown when you share the link.
+        |   |-- sitemap.ts        Generates /sitemap.xml for Google.
+        |   |-- robots.ts         Generates /robots.txt for Google.
+        |   `-- not-found.tsx     The 404 page.
+        |
+        |-- components/
+        |   |-- sections/         One file per section of the page.
+        |   |-- layout/           Navigation, footer, theme, command palette.
+        |   |-- ui/               Small reusable pieces (buttons, headings).
+        |   `-- visuals/          The animated hero diagram and project artwork.
+        |
+        |-- lib/                  Helper code (hooks, utilities, SEO config).
+        `-- types/                TypeScript definitions for the data files.
+
+RULE OF THUMB
+-------------
+To change WHAT the site says      ->  edit a file in  src/data/
+To change WHAT COLOUR it is       ->  edit           src/app/globals.css
+To change images or the CV        ->  replace files in  public/
+
+
+================================================================================
+3. REQUIREMENTS BEFORE RUNNING
+================================================================================
+
+You need three programs installed.
+
+    Node.js     version 20.9 or newer   (this project was built on 20.18.3)
+    npm         comes bundled with Node.js
+    Git         to save and upload your changes
+
+HOW TO CHECK WHAT YOU HAVE
+--------------------------
+
+Open a terminal and run these three commands, one at a time:
+
+    node -v
+    npm -v
+    git --version
+
+You should see something like:
+
+    v20.18.3
+    10.8.2
+    git version 2.47.1
+
+IF NODE IS MISSING OR TOO OLD
+-----------------------------
+
+Download the "LTS" version from:
+
+    https://nodejs.org
+
+Install it, close your terminal completely, open a new one, and run
+`node -v` again.
+
+If the number is BELOW v20.9.0, the project will not build. Upgrade before
+continuing.
+
+
+================================================================================
+4. HOW TO RUN THE PROJECT LOCALLY
+================================================================================
+
+STEP 1 — Go into the project folder
+
+    cd "/home/timsilo/Desktop/hussin/Portfolio repo"
+
+STEP 2 — Install the libraries (only needed the first time, or after you
+         pull changes that add a new library)
+
+    npm install
+
+    This downloads everything into a `node_modules` folder.
+    It takes 1-3 minutes. It will print some warnings — that is normal.
+
+STEP 3 — Start the development server
+
+    npm run dev
+
+    You will see something like:
+
+        ▲ Next.js 16.3.4
+        - Local:  http://localhost:3000
+
+STEP 4 — Open the website
+
+    Open your browser and go to:
+
+        http://localhost:3000
+
+    The site is now running on YOUR computer only. Nobody else can see it.
+
+STEP 5 — Edit and watch it update
+
+    Change any file in src/data/, save it, and the browser updates by itself.
+    You do not need to restart anything.
+
+STEP 6 — Stop the server
+
+    Click on the terminal and press:  Ctrl + C
+
+
+OTHER USEFUL COMMANDS
+---------------------
+
+    npm run build       Builds the real production version.
+                        ALWAYS run this before pushing. If it fails, the
+                        deployment on Vercel will fail too.
+
+    npm run start       Runs the built production version locally
+                        (run `npm run build` first).
+
+    npm run lint        Checks the code for problems.
+
+    npm run typecheck   Checks that all your data matches the expected shape.
+                        Very useful after editing src/data/ files.
+
+
+================================================================================
+5. WHERE TO PUT MY PROFILE PHOTO
+================================================================================
+
+ALREADY DONE
+------------
+A profile photo has already been added for you. It was extracted from the photo
+inside your own CV (CV1.pdf) and resized for the web.
+
+    Current file:   public/images/profile/profile.jpg
+    Current size:   1200 x 1500 pixels (about 200 KB)
+
+You do not have to do anything. But if you want a BETTER photo, here is how.
+
+
+HOW TO REPLACE IT
+-----------------
+
+    EXACT FOLDER:     public/images/profile/
+    EXACT FILENAME:   profile.jpg
+    (lowercase, with .jpg at the end — the name must match exactly)
+
+    1. Prepare your new photo.
+    2. Rename it to exactly:  profile.jpg
+    3. Copy it into the folder  public/images/profile/
+       replacing the file that is already there.
+    4. Refresh your browser.
+
+RECOMMENDED IMAGE SPECIFICATIONS
+--------------------------------
+
+    Shape           Portrait, taller than wide.
+    Aspect ratio    4:5  (the site displays it in a 4:5 frame)
+    Dimensions      1200 x 1500 pixels is ideal.
+                    Do not go below 800 x 1000 (it will look blurry).
+                    Do not go above 2000 x 2500 (pointlessly large file).
+    Format          .jpg  (best for photographs)
+    File size       Keep it under 400 KB. Under 250 KB is better.
+    Framing         Head and shoulders, face roughly in the upper middle.
+                    The site darkens the bottom of the photo slightly, so
+                    do not put anything important down there.
+
+IF YOU WANT TO USE A DIFFERENT FILENAME
+---------------------------------------
+
+Open:  src/data/personal.ts
+Find:  profileImage: "/images/profile/profile.jpg",
+Change the text inside the quotes to your filename, for example:
+
+    profileImage: "/images/profile/abdedaym.jpg",
+
+Note the path always starts with  /images/  (NOT  /public/images/).
+
+IF THE PHOTO IS MISSING
+-----------------------
+
+Nothing breaks. The site automatically shows an elegant placeholder with your
+initials ("AC") on a gradient. You will never see a broken image icon.
+
+
+================================================================================
+6. WHERE TO PUT PROJECT SCREENSHOTS
+================================================================================
+
+RIGHT NOW
+---------
+No screenshots are needed. Every project card currently shows original
+generated artwork that was designed specifically for that project — an NDVI
+satellite raster for AgriSure AI, a Kubernetes cluster diagram for TaskMaster,
+a message-classification flow for Mindkeeper, and so on.
+
+These look good on their own. Adding a real screenshot is an UPGRADE, not a
+requirement.
+
+
+HOW TO ADD A SCREENSHOT
+-----------------------
+
+    EXACT FOLDER:  public/images/projects/
+
+    STEP 1 — Take the screenshot of your running project.
+
+    STEP 2 — Name it after the project, in lowercase with dashes:
+
+                 agrisure.png
+                 ecommerce.png
+                 taskmaster.png
+                 mindkeeper.png
+                 ai-system-designer.png
+                 fstracker.png
+
+    STEP 3 — Put the file in  public/images/projects/
+
+    STEP 4 — Connect it to the project.
+
+             Open:  src/data/projects.ts
+             Find the project you want (search for its name).
+             You will see a line that is "commented out" like this:
+
+                 // image: "/images/projects/agrisure.png",
+
+             Remove the two slashes at the start so it becomes:
+
+                 image: "/images/projects/agrisure.png",
+
+             Save the file. The screenshot now replaces the generated artwork.
+
+    STEP 5 — Refresh the browser and check it.
+
+RECOMMENDED SCREENSHOT SPECIFICATIONS
+-------------------------------------
+
+    Aspect ratio    16:10 for the grid cards, 16:9 for the featured card.
+                    Anything close is fine — the site crops to fit.
+    Dimensions      1600 x 1000 pixels is ideal.
+                    Minimum 1200 x 750.
+    Format          .png for interfaces (sharp text), .jpg for photos.
+    File size       Under 500 KB each. Compress at https://squoosh.app
+                    if yours are larger.
+    Content         Show the most impressive screen. Avoid empty states,
+                    lorem ipsum, and anything with real personal data in it.
+
+IF A SCREENSHOT IS MISSING OR BROKEN
+------------------------------------
+
+The site silently falls back to the generated artwork. It never breaks.
+
+
+================================================================================
+7. WHERE TO PUT MY CV PDF
+================================================================================
+
+ALREADY DONE
+------------
+Your CV has already been installed and optimised.
+
+    Source file:    CV1.pdf  (4.2 MB — kept in the project root, untouched)
+    Website file:   public/documents/Abdedaym-Chakra-CV.pdf  (54 KB)
+
+The website version was compressed from 4.2 MB down to 54 KB. The text, the
+layout and the links are identical — only the embedded photo was re-encoded.
+This matters: 4.2 MB is a slow download on a phone.
+
+
+HOW TO UPDATE YOUR CV LATER
+---------------------------
+
+    EXACT FOLDER:     public/documents/
+    EXACT FILENAME:   Abdedaym-Chakra-CV.pdf
+                      (capital A, capital C, with the dashes — exactly this)
+
+    1. Export your new CV as a PDF.
+    2. Rename it to exactly:  Abdedaym-Chakra-CV.pdf
+    3. Copy it into  public/documents/  replacing the old one.
+    4. Refresh the browser and click "Download CV" to test it.
+
+IF YOUR PDF IS LARGER THAN 1 MB
+-------------------------------
+
+Compress it first. On Linux, with ghostscript installed:
+
+    gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.5 -dPDFSETTINGS=/ebook \
+       -dNOPAUSE -dQUIET -dBATCH -sOutputFile=cv-small.pdf your-cv.pdf
+
+Or use a free online tool such as https://www.ilovepdf.com/compress_pdf
+
+HOW THE DOWNLOAD BUTTON WORKS
+-----------------------------
+
+There are three "Download CV" buttons on the site: in the hero, in the contact
+section, and inside the Ctrl+K command palette. All three read the same two
+settings from  src/data/personal.ts :
+
+    cvPath:     "/documents/Abdedaym-Chakra-CV.pdf",
+    cvFileName: "Abdedaym-Chakra-CV.pdf",
+
+  cvPath      = where the file lives (always starts with /documents/)
+  cvFileName  = the name the visitor's browser suggests when saving
+
+If you change the filename in the folder, change BOTH of these lines to match.
+
+This works identically on your computer and on Vercel — the PDF is just a
+static file served straight from the public folder.
+
+
+================================================================================
+8. HOW TO CHANGE MY PERSONAL INFORMATION
+================================================================================
+
+EVERYTHING personal is in ONE file:
+
+    src/data/personal.ts
+
+Open it in any text editor. Change the text between the quotation marks.
+Do not delete the quotes, the commas, or the colons.
+
+HERE IS EXACTLY WHERE EACH THING IS
+-----------------------------------
+
+  YOUR NAME
+      name: "Abdedaym Chakra",
+      Appears in: the hero, the navigation, the footer, the browser tab,
+      Google search results, and the social sharing image.
+
+  YOUR PROFESSIONAL TITLE
+      title: "Aspiring Data & AI Engineer",
+      This is the single most important line on the site. It is what a
+      recruiter reads first.
+
+  THE SUPPORTING DISCIPLINES
+      disciplines: ["Software Engineering", "Cloud", "DevOps"],
+      Shown after your title, separated by slashes.
+      Add or remove items inside the square brackets.
+
+  THE BIG HERO HEADLINE
+      headline: {
+        lead:   "Engineering intelligent systems",
+        accent: "from data to deployment",
+        trail:  ".",
+      },
+      The site prints these three parts joined together. The `accent` part is
+      the one that gets the blue-to-cyan gradient colour. Keep each part short.
+
+  THE SHORT PARAGRAPH UNDER THE HEADLINE
+      heroSummary: "Final-year engineering student in ...",
+
+  YOUR BIOGRAPHY (the About section)
+      about: [
+        "First paragraph...",
+        "Second paragraph...",
+        "Third paragraph...",
+      ],
+      Each string in the list becomes one paragraph.
+      To add a fourth paragraph, add another "..." line with a comma.
+
+  YOUR EMAIL
+      email: "chakraabdedaym@gmail.com",
+      AND in the socials list below it:
+        { label: "Email", href: "mailto:chakraabdedaym@gmail.com", ... }
+      >>> CHANGE IT IN BOTH PLACES. <<<
+
+  YOUR GITHUB
+      href: "https://github.com/CHAKRAbdedaym",
+      display: "CHAKRAbdedaym",
+
+  YOUR LINKEDIN
+      href: "https://www.linkedin.com/in/chakra-abdedaym",
+      display: "chakra-abdedaym",
+
+  YOUR LOCATION
+      location: "Marrakech, Morocco",
+
+  YOUR PHONE NUMBER
+      phone: "+212 619-242938",
+      showPhone: false,
+
+      >>> The phone number is HIDDEN by default. This is deliberate: a phone
+          number on a public web page gets collected by spam bots. Recruiters
+          who are serious will email you, and your number is on your CV anyway.
+
+          If you still want it displayed, change false to true:
+              showPhone: true,
+
+  YOUR AVAILABILITY (the pill at the top of the hero)
+      availability: {
+        label:  "Open to a Final Year Internship (PFE)",
+        detail: "Available from February 2027",
+      },
+      >>> REMEMBER TO UPDATE THIS once you find your internship.
+
+  "CURRENTLY EXPLORING" PANEL (in the About section)
+      currentFocus: [
+        { label: "Applied AI", detail: "RAG pipelines, AI agents and ..." },
+        ...
+      ]
+
+AFTER EDITING
+-------------
+Save the file, then check nothing is broken:
+
+    npm run typecheck
+
+If it prints nothing, everything is correct.
+If it prints an error, it tells you the file and line number — usually a
+missing comma or a missing quotation mark.
+
+
+================================================================================
+9. HOW TO ADD OR EDIT PROJECTS
+================================================================================
+
+FILE TO EDIT:   src/data/projects.ts
+
+Each project is one block between  {  and  },  inside the big list.
+
+TO EDIT AN EXISTING PROJECT
+---------------------------
+Search for its name (for example "TaskMaster"), and change the text.
+
+TO ADD A NEW PROJECT
+--------------------
+Copy an entire existing block (from its opening `{` to its closing `},`),
+paste it, and change every value. Here is what each field means:
+
+    id:         A unique short name, lowercase with dashes.
+                Used internally. Must not repeat.
+                Example:  "weather-api"
+
+    name:       The project title shown on the card.
+                Example:  "Weather API"
+
+    subtitle:   One line, shown in blue under the title.
+                Example:  "Forecast aggregation across three providers"
+
+    domain:     The category label above the title.
+                Example:  "Backend & Data"
+
+    status:     MUST be one of exactly these four:
+                    "Production"
+                    "Award Winner"
+                    "Personal Project"
+                    "In Development"
+
+    year:       "2026"
+
+    award:      OPTIONAL. Delete this line if there is no award.
+                Example:  "1st Place — Some Hackathon"
+
+    summary:    1-2 sentences. Shown on the card.
+
+    challenge:  The problem, in 2-4 sentences. Shown in the case study.
+                Write about WHY it was hard, not just what it was.
+
+    solution:   How you solved it, in 2-4 sentences.
+
+    architecture: A LIST of technical bullet points. One string per line:
+                  [
+                    "First technical point",
+                    "Second technical point",
+                  ]
+
+    features:   A LIST of what the product does, one string per line.
+
+    impact:     One or two sentences on the result.
+                >>> Do NOT invent numbers or metrics you cannot back up.
+
+    stack:      A LIST of technology names shown as small chips.
+                  ["Python", "FastAPI", "PostgreSQL"]
+
+    visual:     Which generated artwork to draw. MUST be one of exactly:
+                    "satellite"       NDVI / geospatial raster
+                    "commerce"        product cards and a revenue chart
+                    "orchestration"   Kubernetes-style cluster grid
+                    "agent"           AI message classification flow
+                    "architecture"    API / queue / workers / databases
+                    "vision"          computer-vision detection brackets
+
+    image:      OPTIONAL. See section 6.
+
+    links:      OPTIONAL. Buttons only appear for links you actually provide,
+                so there are never dead links on your site.
+
+                  links: {
+                    github: "https://github.com/CHAKRAbdedaym/your-repo",
+                    demo:   "https://your-demo.vercel.app",
+                  },
+
+                >>> IMPORTANT: right now NO project has links, because no
+                    repository URLs were available when the site was built.
+                    Adding your GitHub links is the single highest-value
+                    improvement you can make. Recruiters click them.
+
+    featured:   true or false.
+                >>> EXACTLY ONE project must be true. It gets the big card at
+                    the top. Currently that is AgriSure AI.
+                    If you set a second one to true, only the first is used.
+
+AFTER EDITING
+-------------
+    npm run typecheck
+
+TypeScript will tell you immediately if you used an invalid `status` or
+`visual` value, or forgot a required field.
+
+
+================================================================================
+10. HOW TO ADD EXPERIENCE AND EDUCATION
+================================================================================
+
+--------------------------------------------------------------------------------
+TO ADD AN INTERNSHIP OR A JOB
+--------------------------------------------------------------------------------
+
+FILE TO EDIT:   src/data/experience.ts
+
+Entries are listed NEWEST FIRST. To add a new role, copy an existing block and
+put it at the TOP of the list.
+
+    id:         Unique short name.  "acme-corp"
+    role:       "Data Engineer Intern"
+    company:    "Acme Corp"
+    location:   "Rabat, Morocco"
+    period:     "March 2027 — August 2027"
+    duration:   "6 months"
+
+    kind:       MUST be either "enterprise" or "startup".
+                "enterprise" gives the entry the highlighted treatment with a
+                blue border and an "Enterprise" badge. Use it for the roles
+                you most want a recruiter to notice.
+
+    summary:    2-3 sentences describing the role overall.
+
+    highlights: The distinct workstreams or projects within the role.
+                Each becomes a small card. Two works best visually:
+
+                  highlights: [
+                    {
+                      name: "Ingestion pipeline",
+                      description: "Built the pipeline that ...",
+                    },
+                    {
+                      name: "Monitoring dashboard",
+                      description: "Designed the dashboard that ...",
+                    },
+                  ],
+
+    keywords:   Short capability phrases shown as blue chips.
+                  ["Data Modelling", "Airflow", "Team Leadership"]
+
+    stack:      Technology names shown as grey chips at the bottom.
+
+--------------------------------------------------------------------------------
+TO ADD A DEGREE
+--------------------------------------------------------------------------------
+
+FILE TO EDIT:   src/data/education.ts
+
+Also newest first. Copy a block and change:
+
+    id:           "masters"
+    degree:       "Master's Degree"
+    field:        "Artificial Intelligence"
+    institution:  "Some University"
+    location:     "Casablanca"
+    period:       "2027 — 2029"
+    note:         OPTIONAL. A single highlighted line, shown in blue with a
+                  dot. Currently used for "Final year — seeking a PFE
+                  internship from February 2027".
+                  >>> Remember to remove or update this note once you have
+                      found your internship.
+
+Then:  npm run typecheck
+
+
+================================================================================
+11. HOW TO ADD NEW SKILLS
+================================================================================
+
+FILE TO EDIT:   src/data/skills.ts
+
+There are three separate lists in this file.
+
+--------------------------------------------------------------------------------
+A) TO ADD A TECHNOLOGY TO AN EXISTING DOMAIN
+--------------------------------------------------------------------------------
+
+This is what you will do 95% of the time.
+
+Find the domain, then add your technology to its `items` list.
+For example, to add "Kafka" to the data domain:
+
+    {
+      id: "data",
+      name: "Data & Databases",
+      ...
+      items: [
+        "PostgreSQL",
+        "MySQL",
+        "MongoDB",
+        "Kafka",              <-- add this line
+      ],
+    },
+
+Do not forget the quotes and the comma.
+
+--------------------------------------------------------------------------------
+B) TO ADD A WHOLE NEW DOMAIN CARD
+--------------------------------------------------------------------------------
+
+Copy an entire domain block and change:
+
+    id:           Unique short name.  "security"
+    name:         "Security Engineering"
+    description:  One sentence about how you use this domain in practice.
+
+    icon:         MUST be one of exactly these words:
+                      "brain"      a brain      (AI / ML)
+                      "server"     a server     (backend)
+                      "layout"     a layout     (frontend)
+                      "cloud"      a cloud      (cloud / devops)
+                      "database"   a database   (data)
+                      "wrench"     a wrench     (tools)
+                      "code"       code brackets (general)
+
+                  These are the only values that work. If you need a different
+                  icon, it has to be added to  src/lib/icons.ts  first.
+
+    accent:       MUST be one of:  "blue"  "indigo"  "cyan"  "violet"
+                  This sets the colour of the icon and the hover glow.
+
+    items:        The list of technologies.
+
+--------------------------------------------------------------------------------
+C) THE TWO SMALLER LISTS AT THE BOTTOM OF THE FILE
+--------------------------------------------------------------------------------
+
+    languagesUsed     The programming languages that scroll across the screen
+                      in a moving strip above the domain cards.
+                      Just a simple list of names.
+
+    spokenLanguages   Arabic / French / English, shown in the About section.
+                          { name: "Spanish", level: "Basic", strength: 1 }
+                      `strength` must be 1, 2 or 3. It draws that many filled
+                      dots out of three. It is NOT a percentage and it is not
+                      labelled as one.
+
+--------------------------------------------------------------------------------
+A NOTE ON HONESTY
+--------------------------------------------------------------------------------
+
+This section is deliberately titled "The technologies and domains I work with",
+not "My skills at 95%". There are no progress bars and no star ratings, because
+experienced engineers and recruiters both distrust them. Keep it that way — a
+long honest list is far more credible than a short list of fake 90% bars.
+
+
+================================================================================
+12. HOW TO ADD ACHIEVEMENTS AND CERTIFICATIONS
+================================================================================
+
+--------------------------------------------------------------------------------
+ACHIEVEMENTS
+--------------------------------------------------------------------------------
+
+FILE TO EDIT:   src/data/achievements.ts
+
+Copy an existing block and change:
+
+    id:            Unique short name.
+    title:         "Some Hackathon"
+    organisation:  "Organiser name"
+    period:        "2027"
+    badge:         OPTIONAL. A short award label, e.g. "1st Place".
+                   Delete this line entirely if you did not place.
+    description:   2-3 sentences.
+    featured:      true or false.
+                   `true` gives the large highlighted card with the medal
+                   circle at the top of the section. Currently RAMADANIA is
+                   the featured one. You can have more than one featured
+                   entry — they stack.
+    icon:          MUST be one of:
+                       "trophy"    a trophy   (competitions you won)
+                       "users"     people     (community / club roles)
+                       "flag"      a flag     (competitions you entered)
+                       "sparkles"  sparkles   (anything else)
+
+>>> IMPORTANT: only claim a ranking you actually achieved. Your CV lists
+    "3e Place – RAMADANIA, SkillUp IT 2026 & DEV4DAYS". The site states the
+    3rd place for RAMADANIA specifically, and describes SkillUp IT and
+    DEV4DAYS as competitions you took part in, without claiming a ranking for
+    them. If you did place in those, add the ranking to their `badge` field.
+
+--------------------------------------------------------------------------------
+CERTIFICATIONS
+--------------------------------------------------------------------------------
+
+FILE TO EDIT:   src/data/certifications.ts
+
+Copy the existing block and change:
+
+    id:        Unique short name.
+    name:      "AWS Certified Cloud Practitioner"
+    issuer:    "Amazon Web Services"
+    year:      "2027"
+    category:  A short grouping label, e.g. "Cloud Infrastructure".
+    tracks:    The individual exams or modules covered:
+                   ["Cloud Concepts", "Security", "Billing"]
+
+>>> No credential IDs or verification links are shown anywhere, because
+    inventing them would be worse than omitting them. If you have a real
+    verification URL and want it displayed, that requires a small code change
+    in  src/components/sections/Achievements.tsx  — ask a developer, or open
+    the file and copy how the GitHub links are rendered in the projects
+    section.
+
+
+================================================================================
+13. ENVIRONMENT VARIABLES
+================================================================================
+
+>>> THIS PORTFOLIO DOES NOT REQUIRE ENVIRONMENT VARIABLES FOR THE CORE
+    FUNCTIONALITY.
+
+You can run it, build it and deploy it to Vercel without setting a single one.
+There are no API keys, no secrets, and no external services.
+
+THE ONE OPTIONAL VARIABLE
+-------------------------
+
+    NEXT_PUBLIC_SITE_URL
+
+    What it does:
+        Tells the site its own public address. This address is used for:
+          - the canonical link tag (tells Google which URL is the real one)
+          - the Open Graph tags (the preview card when you share the link)
+          - sitemap.xml and robots.txt
+
+    Do I need it?
+        NO, if you use the free address Vercel gives you
+        (something like my-portfolio.vercel.app). Vercel automatically
+        provides the address and the site picks it up on its own.
+
+        YES, if you buy a custom domain such as abdedaym.dev. Then set it so
+        that Google indexes the right address.
+
+    Values to use:
+        Local development:   leave it empty (defaults to http://localhost:3000)
+        Production:          https://your-actual-domain.com
+                             (no trailing slash at the end)
+
+HOW TO SET IT LOCALLY
+---------------------
+
+    1. In the project folder, copy the example file:
+
+           cp .env.example .env.local
+
+    2. Open  .env.local  and fill in the value:
+
+           NEXT_PUBLIC_SITE_URL=https://abdedaym.dev
+
+    3. Stop the dev server (Ctrl+C) and start it again with `npm run dev`.
+       Environment variables are only read at startup.
+
+>>> NEVER commit .env.local to Git. It is already listed in .gitignore, so
+    Git will ignore it automatically. Do not remove that line.
+
+HOW TO SET IT ON VERCEL
+-----------------------
+
+    1. Go to your project on vercel.com
+    2. Settings  ->  Environment Variables
+    3. Key:    NEXT_PUBLIC_SITE_URL
+       Value:  https://your-actual-domain.com
+       Environments: tick Production (and Preview if you like)
+    4. Save.
+    5. Go to the Deployments tab and click "Redeploy" on the latest
+       deployment. Environment variables are only applied at BUILD time, so an
+       existing deployment will not pick up the new value on its own.
+
+
+================================================================================
+14. GITHUB REPOSITORY STATUS
+================================================================================
+
+>>> THE GITHUB REPOSITORY ALREADY EXISTS AND IS ALREADY CONNECTED TO THIS
+    LOCAL PROJECT.
+
+    You do NOT need to create a repository.
+    You do NOT need to run `git init`.
+    You do NOT need to add a remote.
+
+Your repository is:
+
+    https://github.com/CHAKRAbdedaym/My_Portfolio
+
+HOW TO VERIFY THE CONNECTION
+----------------------------
+
+Run:
+
+    git remote -v
+
+You should see exactly this:
+
+    origin  git@github.com:CHAKRAbdedaym/My_Portfolio.git (fetch)
+    origin  git@github.com:CHAKRAbdedaym/My_Portfolio.git (push)
+
+("origin" is just the nickname Git gives to your GitHub repository.)
+
+HOW TO SEE WHAT HAS CHANGED
+---------------------------
+
+    git status
+
+    - Files in RED are changed but not yet saved to Git.
+    - Files in GREEN are staged, ready to be saved.
+    - "nothing to commit, working tree clean" means everything is saved.
+
+Which branch am I on?
+
+    git branch
+
+    The one with the * next to it is your current branch. It should be `main`.
+
+HOW TO SAVE AND UPLOAD YOUR CHANGES
+-----------------------------------
+
+Three commands, always in this order:
+
+    git add .
+        Stages every change you made. (The dot means "everything".)
+
+    git commit -m "describe what you changed"
+        Saves those changes locally, with a message.
+        Write a real message. Good examples:
+            git commit -m "content: update availability to March 2027"
+            git commit -m "feat: add GitHub links to all projects"
+            git commit -m "chore: replace profile photo"
+
+    git push
+        Uploads to GitHub. This is what triggers a new deployment.
+
+WHAT NOT TO DO
+--------------
+
+    Do NOT run `git init` — it is already a Git repository.
+    Do NOT run `git remote add origin ...` — the remote already exists.
+    Do NOT create a second repository on GitHub.
+    Do NOT commit .env.local or node_modules — .gitignore already blocks both.
+
+
+================================================================================
+15. HOW TO DEPLOY ON VERCEL
+================================================================================
+
+Vercel is the company that makes Next.js. Hosting a portfolio there is free.
+Read every step — this assumes you have never deployed anything.
+
+--------------------------------------------------------------------------------
+BEFORE YOU START
+--------------------------------------------------------------------------------
+
+Make sure your latest work is on GitHub. Run these in the project folder:
+
+    npm run build          <-- must succeed with no errors
+    git add .
+    git commit -m "chore: prepare for deployment"
+    git push
+
+--------------------------------------------------------------------------------
+STEP 1 — Create or log into a Vercel account
+--------------------------------------------------------------------------------
+
+    Go to:  https://vercel.com/signup
+
+    Click  "Continue with GitHub".
+
+    Using GitHub to sign up is important — it connects the two accounts
+    automatically, which is what makes automatic deployments work.
+
+    Authorise Vercel when GitHub asks.
+
+--------------------------------------------------------------------------------
+STEP 2 — Connect GitHub to Vercel
+--------------------------------------------------------------------------------
+
+    If you signed up with GitHub, this is already done.
+
+    If Vercel asks which repositories it may access, you can choose either:
+        "All repositories", or
+        "Only select repositories" -> then pick  My_Portfolio
+
+--------------------------------------------------------------------------------
+STEP 3 — Import the EXISTING GitHub repository
+--------------------------------------------------------------------------------
+
+    On your Vercel dashboard, click  "Add New..."  ->  "Project".
+
+    You will see a list of your GitHub repositories.
+
+    Find  My_Portfolio  and click  "Import"  next to it.
+
+    >>> Do not create a new repository. Import the one that already exists.
+
+--------------------------------------------------------------------------------
+STEP 4 — Vercel detects Next.js automatically
+--------------------------------------------------------------------------------
+
+    On the configuration screen, Vercel reads your package.json and works out
+    what the project is. You should see:
+
+        Framework Preset:  Next.js
+
+    If it says that, everything is correct. Do not change anything.
+
+--------------------------------------------------------------------------------
+STEP 5 — Verify the settings
+--------------------------------------------------------------------------------
+
+    Expand "Build and Output Settings" and confirm:
+
+        Framework Preset     Next.js
+        Root Directory       ./            (leave as it is)
+        Build Command        npm run build     (or "next build" — both fine)
+        Output Directory     .next             (Vercel fills this in)
+        Install Command      npm install
+
+    Under "Node.js Version" (you may need to look in Settings after the first
+    deploy), make sure it is 20.x or newer. 22.x is the current default and
+    works fine.
+
+--------------------------------------------------------------------------------
+STEP 6 — Add environment variables (you can skip this)
+--------------------------------------------------------------------------------
+
+    This portfolio needs NONE. Leave the section empty and continue.
+
+    Come back to this later only if you buy a custom domain — then add
+    NEXT_PUBLIC_SITE_URL as described in section 13.
+
+--------------------------------------------------------------------------------
+STEP 7 — Click Deploy
+--------------------------------------------------------------------------------
+
+    Click the big  "Deploy"  button.
+
+    Vercel will now:
+        1. Download your code from GitHub
+        2. Run  npm install
+        3. Run  npm run build
+        4. Publish the result worldwide
+
+    This takes about 1-3 minutes. You will see the build log scrolling.
+
+    When it finishes you get a congratulations screen with a preview image.
+
+--------------------------------------------------------------------------------
+STEP 8 — Open your live website
+--------------------------------------------------------------------------------
+
+    Click the preview image, or the "Visit" button.
+
+    Your address will look like:
+
+        https://my-portfolio-xxxx.vercel.app
+
+    That is your live portfolio. It is public. You can put that link on your
+    CV, your LinkedIn and your job applications right now.
+
+    To find the address again later: vercel.com -> your project -> the domain
+    is listed at the top of the page.
+
+    TO GET A NICER ADDRESS (free):
+        Project  ->  Settings  ->  Domains
+        Edit the .vercel.app subdomain to something like:
+            abdedaym-chakra.vercel.app
+        as long as nobody else has taken it.
+
+--------------------------------------------------------------------------------
+STEP 9 — Check it on your phone
+--------------------------------------------------------------------------------
+
+    Open the link on your phone. Check the hero, scroll through every section,
+    open the menu, open a project case study, and tap Download CV.
+
+
+================================================================================
+16. AUTOMATIC DEPLOYMENTS
+================================================================================
+
+After the first deployment, you never need to touch the Vercel dashboard again.
+
+HERE IS WHAT HAPPENS AUTOMATICALLY
+----------------------------------
+
+    You edit a file on your computer
+                 |
+                 v
+    git add .    and    git commit -m "your message"
+                 |
+                 v
+    git push
+                 |
+                 v
+    GitHub receives the new code
+                 |
+                 v
+    GitHub notifies Vercel automatically
+                 |
+                 v
+    Vercel runs  npm install  and  npm run build
+                 |
+                 v
+    If the build SUCCEEDS  ->  your live website is updated (1-2 minutes)
+    If the build FAILS     ->  your live website STAYS ON THE OLD VERSION
+                               and Vercel emails you the error
+
+    That last point is important and reassuring: a broken build can never take
+    your live site down. The old version keeps serving until a new build
+    succeeds.
+
+BRANCHES
+--------
+
+    Pushing to the  main  branch     ->  updates your PRODUCTION website.
+    Pushing to any other branch      ->  creates a temporary PREVIEW website
+                                         at its own URL, without touching
+                                         production. Useful for trying a big
+                                         redesign safely.
+
+>>> This is why you should ALWAYS run  npm run build  locally before pushing.
+    If it fails on your computer, it will fail on Vercel too.
+
+
+================================================================================
+17. HOW TO UPDATE THE LIVE PORTFOLIO
+================================================================================
+
+This is the routine you will follow every single time. Print it if you like.
+
+    STEP 1 — Make your changes
+             Edit the files (usually something in src/data/).
+
+    STEP 2 — Look at them locally
+             npm run dev
+             Open http://localhost:3000 and check your change.
+
+    STEP 3 — Test it properly
+             Check on a narrow window as well as a wide one.
+             Try the dark AND light theme.
+
+    STEP 4 — Verify it will build
+             Stop the dev server with Ctrl+C, then:
+
+                 npm run build
+
+             >>> If this fails, DO NOT PUSH. Fix the error first.
+                 See section 19.
+
+    STEP 5 — Stage your changes
+             git add .
+
+    STEP 6 — Save them with a message
+             git commit -m "describe what you changed"
+
+    STEP 7 — Upload
+             git push
+
+    STEP 8 — Wait
+             Go to vercel.com and watch the deployment. It takes 1-2 minutes.
+             When the status turns to "Ready", refresh your live site.
+
+             If you do not see your change, do a hard refresh:
+                 Ctrl + Shift + R    (Windows / Linux)
+                 Cmd + Shift + R     (Mac)
+
+
+================================================================================
+18. CUSTOM DOMAIN (OPTIONAL)
+================================================================================
+
+A custom domain means an address like  abdedaym.dev  instead of
+my-portfolio.vercel.app. It costs roughly 10-15 EUR per year. It is entirely
+optional — a .vercel.app address is perfectly professional for a student
+portfolio.
+
+IF YOU DECIDE TO GET ONE
+------------------------
+
+    STEP 1 — Buy a domain
+
+        From any registrar: Namecheap, Cloudflare, Porkbun, OVH, GoDaddy.
+        Good choices for a name:
+            abdedaymchakra.com
+            abdedaym.dev
+            chakra.engineer
+
+    STEP 2 — Add it in Vercel
+
+        vercel.com -> your project -> Settings -> Domains
+        Type your domain in the box and click "Add".
+
+    STEP 3 — Point the domain at Vercel
+
+        Vercel will show you the exact DNS records to create. It is usually:
+
+            Type: A       Name: @      Value: 76.76.21.21
+            Type: CNAME   Name: www    Value: cname.vercel-dns.com
+
+        >>> Use the values VERCEL SHOWS YOU, not the ones above. They can
+            change.
+
+        Log in to wherever you bought the domain, find the "DNS" or "DNS
+        Records" section, and add exactly those records.
+
+    STEP 4 — Wait
+
+        DNS changes take between 10 minutes and 48 hours to spread across the
+        internet. Usually under an hour. Vercel shows a green tick when it is
+        working, and sets up the HTTPS certificate for you automatically and
+        for free.
+
+    STEP 5 — Tell the site its new address
+
+        Vercel -> Settings -> Environment Variables
+
+            NEXT_PUBLIC_SITE_URL = https://your-new-domain.com
+
+        Then Deployments -> Redeploy.
+
+        This makes Google index the right address and makes link previews on
+        LinkedIn and WhatsApp show the correct URL.
+
+
+================================================================================
+19. TROUBLESHOOTING
+================================================================================
+
+--------------------------------------------------------------------------------
+PROBLEM: `npm install` fails
+--------------------------------------------------------------------------------
+
+  Try, in order:
+
+    1. Check your Node version:
+           node -v
+       It must be 20.9.0 or newer. If it is older, install a newer Node.
+
+    2. Delete everything and reinstall from scratch:
+           rm -rf node_modules package-lock.json
+           npm install
+
+    3. Clear the npm cache:
+           npm cache clean --force
+           npm install
+
+    4. Check your internet connection. npm downloads about 370 packages.
+
+--------------------------------------------------------------------------------
+PROBLEM: `npm run dev` fails
+--------------------------------------------------------------------------------
+
+  "Error: listen EADDRINUSE: address already in use :::3000"
+      Something else is already using port 3000 — probably a dev server you
+      forgot to stop. Either close it, or run on a different port:
+           PORT=3001 npm run dev
+      then open http://localhost:3001
+
+  "Cannot find module ..."
+      You have not installed the libraries yet:
+           npm install
+
+  The page loads but is completely blank
+      Open the browser console (press F12, then the "Console" tab) and read
+      the red error. It usually names the file and line.
+
+--------------------------------------------------------------------------------
+PROBLEM: `npm run build` fails
+--------------------------------------------------------------------------------
+
+  Read the error message carefully — it names the FILE and the LINE NUMBER.
+
+  "Type error: Property 'xyz' is missing in type ..."
+      You added an entry to a data file but left out a required field.
+      Compare your new block against an existing one — something is missing.
+
+  "Type error: Type '"foo"' is not assignable to type ..."
+      You used a value that is not allowed. This happens with:
+          status:  must be "Production" | "Award Winner" |
+                          "Personal Project" | "In Development"
+          visual:  must be "satellite" | "commerce" | "orchestration" |
+                          "agent" | "architecture" | "vision"
+          kind:    must be "enterprise" | "startup"
+          icon:    see sections 11 and 12 for the allowed values
+      The error message lists the allowed values. Use one of them exactly.
+
+  "Unexpected token" / "',' expected"
+      A punctuation mistake in a data file: a missing comma at the end of a
+      line, a missing closing quote, or a missing } or ].
+
+  Quick check without a full build:
+      npm run typecheck
+  This is much faster and finds the same data errors.
+
+--------------------------------------------------------------------------------
+PROBLEM: Images do not appear
+--------------------------------------------------------------------------------
+
+  1. Check the path in the data file starts with  /images/
+     and NOT with  /public/images/  or  ./images/
+
+         RIGHT:  "/images/projects/agrisure.png"
+         WRONG:  "/public/images/projects/agrisure.png"
+
+  2. Check the filename matches EXACTLY, including capital letters.
+     On Linux and on Vercel,  Photo.JPG  and  photo.jpg  are different files.
+     This is the single most common cause, and it is nasty because it often
+     works on Windows and then breaks on Vercel.
+
+  3. Check the file is actually in the folder:
+         ls public/images/projects/
+
+  4. Remember: a missing image is NOT a bug here. The site is designed to fall
+     back to the generated artwork (projects) or a monogram (profile photo).
+     If you see the fallback, the file is missing or misnamed.
+
+--------------------------------------------------------------------------------
+PROBLEM: The CV download does not work
+--------------------------------------------------------------------------------
+
+  1. Check the file exists:
+         ls public/documents/
+
+  2. Check the name matches  cvPath  in  src/data/personal.ts  EXACTLY,
+     capital letters included.
+
+  3. Test the URL directly in your browser:
+         http://localhost:3000/documents/Abdedaym-Chakra-CV.pdf
+
+--------------------------------------------------------------------------------
+PROBLEM: Environment variables missing / not applied
+--------------------------------------------------------------------------------
+
+  Locally:
+      The file must be named exactly  .env.local  (starting with a dot).
+      You must restart `npm run dev` after changing it.
+
+  On Vercel:
+      Variables are applied at BUILD time, not at page-load time. After adding
+      or changing one you MUST redeploy:
+          Deployments -> the three dots on the latest one -> Redeploy
+
+  Also: only variables whose name starts with  NEXT_PUBLIC_  are visible to
+  the browser. That is a security feature, not a bug.
+
+--------------------------------------------------------------------------------
+PROBLEM: The Vercel deployment fails
+--------------------------------------------------------------------------------
+
+  1. Read the build log on Vercel. Click the failed deployment, then
+     "Building". The error is the same one you would see locally.
+
+  2. Reproduce it on your own machine:
+         npm run build
+     Fix it there, then commit and push again.
+
+  3. If it builds locally but fails on Vercel:
+       - Check the Node.js version in Vercel Settings -> General.
+         It must be 20.x or newer.
+       - Check for filename capitalisation problems (see the images section
+         above). This is the classic "works on my machine" failure.
+       - Make sure you actually pushed. Run `git status` — if it says you have
+         unpushed commits, Vercel is still building your OLD code.
+
+--------------------------------------------------------------------------------
+PROBLEM: `git push` fails
+--------------------------------------------------------------------------------
+
+  "Permission denied (publickey)"
+      Your computer cannot prove to GitHub who you are. The repository uses
+      SSH. Either:
+
+        (a) Set up an SSH key — follow GitHub's guide:
+            https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+
+        (b) Or switch the repository to HTTPS, which asks for a token instead:
+            git remote set-url origin https://github.com/CHAKRAbdedaym/My_Portfolio.git
+            Then push. When prompted for a password, use a Personal Access
+            Token from GitHub -> Settings -> Developer settings, NOT your
+            account password.
+
+      Test whether SSH is working at all:
+            ssh -T git@github.com
+      Success looks like: "Hi CHAKRAbdedaym! You've successfully
+      authenticated..."
+
+  "Updates were rejected because the remote contains work that you do not
+   have locally"
+      Someone (or you, from another computer, or GitHub's web editor) changed
+      the repository. Bring those changes down first:
+            git pull --rebase
+            git push
+
+  "fatal: not a git repository"
+      You are in the wrong folder. cd into the project folder first.
+
+--------------------------------------------------------------------------------
+PROBLEM: Wrong GitHub remote
+--------------------------------------------------------------------------------
+
+  Check what is currently set:
+        git remote -v
+
+  It must show:
+        origin  git@github.com:CHAKRAbdedaym/My_Portfolio.git (fetch)
+        origin  git@github.com:CHAKRAbdedaym/My_Portfolio.git (push)
+
+  If it points somewhere else, correct it WITHOUT creating a new repository:
+        git remote set-url origin git@github.com:CHAKRAbdedaym/My_Portfolio.git
+
+  Then verify again with  git remote -v.
+
+--------------------------------------------------------------------------------
+PROBLEM: The site looks wrong after I changed a colour
+--------------------------------------------------------------------------------
+
+  All colours live in  src/app/globals.css , at the very top, in two blocks:
+
+        :root         { ... }    the DARK theme (the default)
+        :root.light   { ... }    the LIGHT theme
+
+  If you change a colour in one block, change the matching one in the other,
+  or the light theme will break.
+
+  If you make text lighter, check it is still readable. The rule is a contrast
+  ratio of at least 4.5:1 against the background. Test yours at:
+        https://webaim.org/resources/contrastchecker/
+
+--------------------------------------------------------------------------------
+PROBLEM: I broke something and I want to undo it
+--------------------------------------------------------------------------------
+
+  Undo changes to ONE file that you have NOT committed:
+        git checkout -- src/data/personal.ts
+
+  Undo ALL uncommitted changes (careful — this cannot be undone):
+        git checkout -- .
+
+  See your history of saved versions:
+        git log --oneline
+
+  Go back and look at an older version (read-only):
+        git checkout <the-short-code-from-git-log>
+  and come back to the present with:
+        git checkout main
+
+
+================================================================================
+20. FINAL CHECKLIST BEFORE DEPLOYMENT
+================================================================================
+
+Tick each one before you share the link with a recruiter.
+
+CONTENT
+    [x] Profile photo added            (public/images/profile/profile.jpg)
+    [x] CV added                       (public/documents/Abdedaym-Chakra-CV.pdf)
+    [x] GitHub link correct            (github.com/CHAKRAbdedaym)
+    [x] LinkedIn link correct          (linkedin.com/in/chakra-abdedaym)
+    [x] Email correct                  (chakraabdedaym@gmail.com)
+    [x] Experience up to date          (ONEE, IAWEB.DEV)
+    [x] Education up to date
+    [x] Achievements and certifications up to date
+
+STILL TO DO BY YOU
+    [ ] Add GitHub repository links to your projects
+        -> src/data/projects.ts, the `links` field of each project.
+        This is the highest-value remaining improvement. Recruiters click them.
+    [ ] Add a live demo link for the production e-commerce platform, if the
+        site is publicly reachable.
+    [ ] Add project screenshots (optional — see section 6)
+    [ ] Re-read every project description out loud and check it is accurate
+
+TECHNICAL
+    [ ] npm run build   completes with no errors
+    [ ] npm run lint    completes with no errors
+    [ ] No secrets committed  (check `git status` — .env.local must not appear)
+    [ ] GitHub repository updated  (git push  done, `git status` clean)
+    [ ] Vercel connected and the first deployment succeeded
+
+FINAL LOOK
+    [ ] Open the live site on a DESKTOP and read every section
+    [ ] Open the live site on your PHONE and read every section
+    [ ] Switch to the light theme and check it still looks right
+    [ ] Click "Download CV" — the PDF should open or download
+    [ ] Click every GitHub and LinkedIn link — they should open the right page
+    [ ] Open a project card and read the whole case study
+    [ ] Press Ctrl+K and try the search palette
+    [ ] Share the link to yourself on WhatsApp or LinkedIn and check the
+        preview card looks right
+
+
+================================================================================
+
+  That is everything.
+
+  If you only remember three commands, remember these:
+
+      npm run dev       look at the site while you edit it
+      npm run build     check nothing is broken before you push
+      git add . && git commit -m "..." && git push       publish it
+
+================================================================================
