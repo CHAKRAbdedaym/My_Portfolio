@@ -2,15 +2,17 @@
   "name": "abdedaym-chakra-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Personal portfolio of Abdedaym Chakra — Aspiring Data & AI Engineer.",
+  "description": "Personal portfolio of Abdedaym Chakra \u2014 Aspiring Data & AI Engineer.",
   "author": "Abdedaym Chakra",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/check-assets.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "cv": "node scripts/compress-cv.mjs"
   },
   "dependencies": {
     "framer-motion": "^13.2.0",

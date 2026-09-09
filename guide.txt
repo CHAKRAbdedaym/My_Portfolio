@@ -95,7 +95,7 @@ WHAT THE WEBSITE CONTAINS
                     Deliberately no percentage bars and no invented ratings.
 
     Achievements(05) The RAMADANIA 3rd place, Club IRISI, other competitions,
-                    and your Oracle certification.
+                    and your AWS certification.
 
     Contact (06)    A large call to action, your email (click to send, or copy
                     to clipboard), your GitHub and LinkedIn, and a CV download.
@@ -133,7 +133,12 @@ marked with >>>.
     |-- next.config.ts            Next.js settings.
     |-- .env.example              Example environment variables (none required).
     |-- .gitignore                Files Git must never upload.
-    |-- CV1.pdf                   Your original CV (kept as the source file).
+    |
+    |-- source/                   Your original full-resolution files.
+    |   |-- Abdedaym-Chakra-CV-source.pdf   The CV straight out of LaTeX
+    |   |-- profile-source.png              The original headshot
+    |   `-- README.md             How the web versions were made from these.
+    |                             The website does NOT read from this folder.
     |
     |-- public/                   >>> FILES YOU CAN REPLACE
     |   |-- documents/
@@ -287,13 +292,22 @@ OTHER USEFUL COMMANDS
 
 ALREADY DONE
 ------------
-A profile photo has already been added for you. It was extracted from the photo
-inside your own CV (CV1.pdf) and resized for the web.
+Your profile photo is installed and optimised for the web.
 
-    Current file:   public/images/profile/profile.jpg
-    Current size:   1200 x 1500 pixels (about 200 KB)
+    Web file:       public/images/profile/profile.jpg
+    Web size:       1086 x 1358 pixels (about 171 KB)
 
-You do not have to do anything. But if you want a BETTER photo, here is how.
+    Original:       source/profile-source.png
+                    1086 x 1448 pixels (1.9 MB)
+
+The original is 3:4 but the site displays a 4:5 portrait, so 90 pixels of
+height were cropped — 20 from the top and 70 from the bottom, which lifts your
+face slightly in the frame. It was NOT enlarged: 1086 pixels wide is already
+more than the site ever needs (the photo renders at about 896 pixels even on a
+high-resolution screen).
+
+You do not have to do anything. But if you want a different photo, here is
+how.
 
 
 HOW TO REPLACE IT
@@ -415,14 +429,19 @@ The site silently falls back to the generated artwork. It never breaks.
 
 ALREADY DONE
 ------------
-Your CV has already been installed and optimised.
+Your CV is installed and optimised.
 
-    Source file:    CV1.pdf  (4.2 MB — kept in the project root, untouched)
-    Website file:   public/documents/Abdedaym-Chakra-CV.pdf  (54 KB)
+    Original:       source/Abdedaym-Chakra-CV-source.pdf   (2.0 MB, untouched)
+    Website file:   public/documents/Abdedaym-Chakra-CV.pdf  (53 KB)
 
-The website version was compressed from 4.2 MB down to 54 KB. The text, the
-layout and the links are identical — only the embedded photo was re-encoded.
-This matters: 4.2 MB is a slow download on a phone.
+The website version was compressed from 2.0 MB down to 53 KB. The text, the
+layout and the links were checked and are identical — only the embedded photo
+was re-encoded. This matters: 2 MB is a slow download on a phone, and the
+Download CV button is one of the things recruiters actually click.
+
+>>> Whenever you export a new CV, put the original in  source/  and compress
+    it into  public/documents/ . The exact commands are in
+    source/README.md .
 
 
 HOW TO UPDATE YOUR CV LATER
@@ -1387,6 +1406,35 @@ PROBLEM: Images do not appear
   4. Remember: a missing image is NOT a bug here. The site is designed to fall
      back to the generated artwork (projects) or a monogram (profile photo).
      If you see the fallback, the file is missing or misnamed.
+
+--------------------------------------------------------------------------------
+PROBLEM: I replaced an image but the OLD one still shows
+--------------------------------------------------------------------------------
+
+  This is the most confusing one, because the file on disk IS correct.
+
+  Next.js keeps a cache of resized images in  .next/cache/images . When you
+  replace a photo but keep the same filename, that cache can still serve the
+  old version.
+
+  THE FIX — stop the server (Ctrl+C), then:
+
+        rm -rf .next/cache/images
+        npm run dev
+
+  Then do a hard refresh in the browser:
+        Ctrl + Shift + R    (Windows / Linux)
+        Cmd + Shift + R     (Mac)
+
+  If it STILL shows the old image, check the actual file:
+
+        ls -la public/images/profile/
+
+  Look at the file size and the modification date. If they did not change, the
+  copy did not actually happen — repeat it.
+
+  >>> This only affects your own computer. Vercel builds from scratch every
+      time, so your live site will always show the new image.
 
 --------------------------------------------------------------------------------
 PROBLEM: The CV download does not work
