@@ -163,13 +163,17 @@ export function Achievements() {
                   {certification.category}
                 </p>
 
-                <ul className="relative mt-5 flex flex-wrap gap-1.5">
-                  {certification.tracks.map((track) => (
-                    <li key={track} className="chip">
-                      {track}
-                    </li>
-                  ))}
-                </ul>
+                {/* A credential may legitimately have no sub-tracks; don't
+                    render an empty list and its top margin in that case. */}
+                {certification.tracks.length > 0 ? (
+                  <ul className="relative mt-5 flex flex-wrap gap-1.5">
+                    {certification.tracks.map((track) => (
+                      <li key={track} className="chip">
+                        {track}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </article>
             </Reveal>
           ))}
