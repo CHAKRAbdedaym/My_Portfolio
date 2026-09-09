@@ -46,6 +46,13 @@ yarn-error.log*
 *.swp
 *.swo
 
+# Office / editor lock files
+# LibreOffice writes .~lock.<name># next to any file you open. One of these
+# was committed by accident; this stops it happening again.
+.~lock.*#
+*.tmp
+~$*
+
 # OS files
 .DS_Store
 .DS_Store?
